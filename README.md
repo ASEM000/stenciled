@@ -4,7 +4,7 @@
 
 
 #### Example 1 : 3x3 Mean 
-```python=1
+```python
 # ---------------------------------- style 1 ----------------------------------
 @stenciled()
 def mean(x):
@@ -20,7 +20,7 @@ def mean(x):
 
 
 #### Example 2 : Convolution 
-```python=1
+```python
 @stenciled(window=(3,3))
 def convolution_3x3(X,F):return numpy.sum(X*F)
 ```
@@ -28,11 +28,9 @@ def convolution_3x3(X,F):return numpy.sum(X*F)
 #### Example 2 : Linear Diffusion
 
 
+<img src="https://i.imgur.com/kI69TUw.png" width="500" />
 
-$\large \frac{\partial u}{\partial t}= \nu \frac{\partial^2 u}{\partial x^2} \Longrightarrow u_{i}^{n}=u_{i}^{n-1}+\frac{\nu\Delta t}{\Delta x^2}(u_{i+1}^{n-1}-2u_{i}^{n-1}+u_{i-1}^{n-1})$ 
-
-
-```python=1
+```python
 @stenciled(inplace=True,window=(3,3),border='all')
 def diffusion_1D(u,k): 
     return u[-1,0] + k * (u[-1,1] -2*u[-1,0] + u[-1,-1])
