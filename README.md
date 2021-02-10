@@ -19,13 +19,13 @@ def mean(x):
 ```
 
 
-#### Example 2 : Convolution 
+#### Example 2 : Convolution ( with parallelization support)
 ```python
-@stenciled(window=(3,3))
+@stenciled(window=(3,3),relative_indexing=False,parallel=True)
 def convolution_3x3(X,F):return numpy.sum(X*F)
 ```
 
-#### Example 2 : Linear Diffusion
+#### Example 3 : Linear Diffusion
 
 
 <img src="https://i.imgur.com/kI69TUw.png" width="500" />
@@ -48,12 +48,12 @@ ___
 |      **Custom kernel size**      |       ❌        |     ✔️     |
 | **Multiple arrays as arguments** |       ✔️        |     ✔️     |
 |         **Update rules**         |       ❌        |     ✔️     |
-|       **Parallelization***       |       ✔️        |     ✔️     |
+|       **Parallelization[1]**       |       ✔️        |     ✔️     |
 |       **Border Handeling**       | `constant` Only |     ✔️     |
 |     **N-Dimensional arrays**     |       ✔️        | `2D` only  |
 |  **Accepts external functions**  |       ❌        |    `✔️     |
 
-
+[1] For inplace = False case only
 ___
 
 ## Notebook examples
