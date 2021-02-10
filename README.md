@@ -2,6 +2,8 @@
 
 ### Simplify  writing stencil kernels powered by  Numba
 
+#### Relative indexing
+<img src="https://i.imgur.com/me5bC17.png" width="50%" />
 
 #### Example 1 : 3x3 Mean 
 ```python
