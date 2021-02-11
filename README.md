@@ -40,18 +40,68 @@ def diffusion_1D(u,k):
 ___
 ## Speed Comparison
 
-#### Example : Convolution in pure python vs parallel stenciled  vs single core stenciled
+#### Speed comparisons ( `@numba.stencil` vs `@stenciled` )
+
+```python
+#---------------------------------------------Test functions--------------------------------------------------------------
+@numba.stencil
+def numba_full(x): 
+    return ( x[1,-1] + x[1,0] + x[1,1] +
+             x[0,-1] + x[0,0] + x[0,1] +
+            x[-1,-1] +x[-1,0] + x[-1,1]) / 9
+
+@stenciled(window=(3,3))
+def stenciled_short_hand(x) : return np.mean(x)
+
+@stenciled(window=(3,3),parallel=True)
+def stenciled_short_hand_parallel(x) : return np.mean(x)
+
+@stenciled()
+def stenciled_full(x): 
+    return ( x[1,-1] + x[1,0] + x[1,1] +
+             x[0,-1] + x[0,0] + x[0,1] +
+            x[-1,-1] +x[-1,0] + x[-1,1]) / 9
+
+@stenciled(parallel=True)
+def stenciled_full_parallel(x): 
+    return ( x[1,-1] + x[1,0] + x[1,1] +
+             x[0,-1] + x[0,0] + x[0,1] +
+            x[-1,-1] +x[-1,0] + x[-1,1]) / 9
+
+@stenciled(window=(3,3))
+def stenciled_full_window(x): 
+    return ( x[1,-1] + x[1,0] + x[1,1] +
+             x[0,-1] + x[0,0] + x[0,1] +
+            x[-1,-1] +x[-1,0] + x[-1,1]) / 9
+
+@stenciled(parallel=True,window=(3,3))
+def stenciled_full_window_parallel(x): 
+    return ( x[1,-1] + x[1,0] + x[1,1] +
+             x[0,-1] + x[0,0] + x[0,1] +
+            x[-1,-1] +x[-1,0] + x[-1,1]) / 9
+
+```
+
+
+<img src='https://i.imgur.com/xUCtA4T.png' width='70%' />
+
+##### Observations
+- Specified window parameter has major speed improvements over non specified window size (kernel inference needs speed improvements )
+- `@stenciled` outperforms `@numba.stencil` for specified kernel size (window parameter)
+- Parallel versions outperforms single core versions for large arrays
+
+#### Example : Convolution in python vs parallel stenciled  vs single core stenciled
 
 ```python
 #----------------------------------Parallel stenciled---------------------------------------------
 @stenciled(window=(3,3),parallel=True,relative_indexing=False)
 def conv2dp(X,F):return np.sum(X*F)
 
-#----------------------------------Non Parallel stenciled---------------------------------------------
+#----------------------------------single core stenciled---------------------------------------------
 @stenciled(window=(3,3),parallel=False,relative_indexing=False)
 def conv2d(X,F):return np.sum(X*F)
 
-#----------------------------------Pure Python --------------------------------------------
+#----------------------------------Python --------------------------------------------
 #Credits : https://github.com/Alescontrela
 def convolution_2D(image, filt, bias, s=1):
     '''
