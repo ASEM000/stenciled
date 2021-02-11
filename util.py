@@ -35,7 +35,12 @@ def stenciled(
         if relative_indexing:
             # Adjust array indices from top left to center cell
             rx,cx  = X.shape
-            r0,c0 = (rx-1)//2 , (cx-1)//2
+            if rx%2 == 0 : r0= (rx-1)//2 +1  # even case: no center => deviate to right
+            else :r0= (rx-1)//2
+                    
+            if cx%2 == 0 : c0= (cx-1)//2 +1  # even case: no center => deviate to right
+            else :c0= (cx-1)//2
+
             result = np.zeros_like(X)
 
             left_region = X[r0:,:c0] ; result[:rx-r0,cx-c0:] = left_region
